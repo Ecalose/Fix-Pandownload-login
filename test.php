@@ -3,7 +3,7 @@ $set=0;//设置公告是否开启 1开启 0关闭
 $gg="测试公告";//测试公告
 $passkey="sswordnedd";//为了防止注入这里限制到了10位
 $mode=1;//0为次数模式 1为流量模式 (单位MB)
-
+$server="8.8.8.8";//填你的服务器ip，在返回信息时抹去服务器信息
 
 $vip_bduss = array("GNHQmtSSHJ6NW9lVVJ2RUdMVnl5NG9VdHEzRTRaOWlUMmFnRERleTZSbTR2ZkpmSUFBQUFBJCQAAAAAAAAAAAEAAABXLSO7uvC68LbuMzQ5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALgwy1-4MMtfN","SVIP2","SVIP3");
 //$ua1="netdisk;P2SP;2.2.60.26";
@@ -121,6 +121,7 @@ if($a=="request"){
 			exit ;
 		}
 		$mm = $ret1;
+                $ret1=str_replace($server,"127.0.0.1",$ret1);
 		$ret1=base64_encode($ret1);
 		if ($mode==0){
 			$tt= (int)$row['time']-1;
