@@ -13,7 +13,7 @@ $xiancheng="8";//最大线程
 
 //创建数据 http://127.0.0.1/api/Request.php?method=createdb
 
-//注册key的次数（流量） http://127.0.0.1/api/Request.php?method=update&pass=sswordnedd&code=888&time=88
+//注册key的次数（流量） http://127.0.0.1/api/Request.php?method=regist&pass=sswordnedd&code=888&time=88
 //更新key的次数（流量） http://127.0.0.1/api/Request.php?method=update&pass=sswordnedd&code=888&time=88
 //删除key的次数（流量） http://127.0.0.1/api/Request.php?method=delect&pass=sswordnedd&code=888&time=88
 
