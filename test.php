@@ -4,13 +4,19 @@ $gg="测试公告";//测试公告
 $passkey="sswordnedd";//为了防止注入这里限制到了10位
 $mode=1;//0为次数模式 1为流量模式 (单位MB)
 $server="8.8.8.8";//填你的服务器ip，在返回信息时抹去服务器信息
-
 $vip_bduss = array("GNHQmtSSHJ6NW9lVVJ2RUdMVnl5NG9VdHEzRTRaOWlUMmFnRERleTZSbTR2ZkpmSUFBQUFBJCQAAAAAAAAAAAEAAABXLSO7uvC68LbuMzQ5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALgwy1-4MMtfN","SVIP2","SVIP3");
 //$ua1="netdisk;P2SP;2.2.60.26";
 //$ua1="netdisk;2.2.51.6;netdisk;10.0.63;PC;android-android;QTP/1.0.32.2";
 $ua1="netdisk;P2SP;3.0.0.3;netdisk;11.5.3;PC;PC-Windows;android-android;11.0;JSbridge4.4.0";
-
 $xiancheng="8";//最大线程
+
+
+//创建数据 http://127.0.0.1/api/Request.php?method=createdb
+
+//注册key的次数（流量） http://127.0.0.1/api/Request.php?method=update&pass=sswordnedd&code=888&time=88
+//更新key的次数（流量） http://127.0.0.1/api/Request.php?method=update&pass=sswordnedd&code=888&time=88
+//删除key的次数（流量） http://127.0.0.1/api/Request.php?method=delect&pass=sswordnedd&code=888&time=88
+
 class MyDB extends SQLite3
 {
 	function __construct()
@@ -18,6 +24,15 @@ class MyDB extends SQLite3
 		$this->open('user111.db');//这里最好自己改下
 	}
 }
+function re_rediect($str){      //正则拦截，防SQL注入(只允许a-zA-Z0-9)
+	if(preg_match("/^[a-zA-Z0-9]+$/", $str) == 1) {
+    // string only contain the a to z , A to Z, 0 to 9
+		return $str;
+	}
+	return "Undefined";
+}
+
+
 
 function getSubstr($str, $leftStr, $rightStr)
 {
@@ -57,6 +72,7 @@ function reqq($url,$data,$ua,$bduss){
 }
 
 $a=$_GET['method'];
+$a=re_rediect($a);
 if($a=="isok"){
 	$meage=array(
 	'code'=> 200,
@@ -71,7 +87,12 @@ if($a=="regist"){
 	$user=$_GET['code'];
 	$time=$_GET['time'];//mode=0 时 是解析次数 ，mode=1 时 为流量大小(MB)
 	$pass=$_GET['pass'];
-	if(strlen($user) > 8 || strlen($passkey)>10 || $passkey!=$pass){
+	$user=re_rediect($user);
+	$time=re_rediect($time);
+	$pass=re_rediect($pass);
+	
+	
+	if(strlen($user) > 8 || strlen($pass)>10 || $passkey!==$pass){
 		
 		$meage=array(
 		'code'=> 403,
@@ -94,6 +115,9 @@ if($a=="regist"){
 if($a=="request"){
 	$user=$_GET['code'];
 	$data=$_GET['data'];
+	
+	//$data=re_rediect($data);
+	$user=re_rediect($user);
 	$data1=base64_decode($data);
 	$db = new MyDB();
 	
@@ -203,4 +227,79 @@ if($a=="createdb"){
 	echo json_encode($meage);
 	exit ;
 }
+if($a=="delect"){
+	$pass=$_GET['pass'];
+	$user=$_GET['code'];
+	$user=re_rediect($user);
+	$pass=re_rediect($pass);
+	if(strlen($user) > 8 || strlen($pass)>10 || $passkey!==$pass){
+		
+		$meage=array(
+		'code'=> 403,
+		'messgae'=> 'Forbiiden'
+		);
+		echo json_encode($meage);
+		exit;
+	}
+	$db = new MyDB();
+	$ret = $db->exec('DELETE FROM user WHERE code="'.$user.'";');
+	//$ret = $db->query('DELETE FROM user WHERE code=);');
+	if($ret)
+	{
+		$meage=array(
+		'code'=> 200,
+		'messgae'=> 'DELETE OK'
+		);
+	}
+	else 
+	{
+		$meage=array(
+		'code'=> 403,
+		'messgae'=> 'Not Exists or No promission'
+		);
+	}
+	echo json_encode($meage);
+	exit ;
+}
+if($a=="update"){
+	$user=$_GET['code'];
+	$time=$_GET['time'];//mode=0 时 是解析次数 ，mode=1 时 为流量大小(MB)
+	$pass=$_GET['pass'];
+	$user=re_rediect($user);
+	$time=re_rediect($time);
+	$pass=re_rediect($pass);
+	if(strlen($user) > 8 || strlen($pass)>10 || $passkey!==$pass){
+		$meage=array(
+		'code'=> 403,
+		'messgae'=> 'Forbiiden'
+		);
+		echo json_encode($meage);
+		exit;
+	}
+	$db = new MyDB();
+	$ret = $db->exec('UPDATE user SET time='.$time.' WHERE code="'.$user.'";');
+	//$ret = $db->query('DELETE FROM user WHERE code=);');
+	if($ret)
+	{
+		$meage=array(
+		'code'=> 200,
+		'messgae'=> 'Update OK'
+		);
+	}
+	else 
+	{
+		$meage=array(
+		'code'=> 403,
+		'messgae'=> 'Not Exists or No promission'
+		);
+	}
+	echo json_encode($meage);
+	exit ;
+}
+$meage=array(
+	'code'=> 403,
+	'messgae'=> 'Method is not define'
+);
+echo json_encode($meage);
+exit;
 ?>
