@@ -144,7 +144,8 @@ if($a=="request"){
 			exit ;
 		}
 		$mm = $ret1;
-		$server = getSubstr($ret1,'client_ip":"','"');
+		$dada=getSubstr($ret1,'client_ip','urls');
+		$server = substr($dada ,3,strlen($dada)-6);
                 $ret1=str_replace($server,"127.0.0.1",$ret1);
 		$ret1=base64_encode($ret1);
 		if ($mode==0){
