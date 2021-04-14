@@ -1,6 +1,6 @@
 # Fix-Pandownload-login
 ## 网页版   
-https://github.com/Admirepowered/pandownload-cloud    
+~~https://github.com/Admirepowered/pandownload-cloud~~    
 ## 使用方法   
 仅修复登录，下载随缘    
 使用方法:   
