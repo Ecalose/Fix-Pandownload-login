@@ -150,6 +150,10 @@ if($a=="request"){
 		$ret1=base64_encode($ret1);
 		if ($mode==0){
 			$tt= (int)$row['time']-1;
+			$size=getSubstr($mm,"&size=","&");
+			$size1=(int)$size;
+			$size1=$size1/1048576;
+            		$ret = $db->exec('INSERT INTO size VALUES ("'.$size1.'");');
 		}
 		elseif ($mode==1){
 			$size=getSubstr($mm,"&size=","&");
@@ -211,6 +215,9 @@ if($a=="createdb"){
 	code TEXT,
 	time INT);
 	');
+	
+	
+	$ret1 = $db->query('CREATE TABLE size(size TEXT);');
 	if($ret)
 	{
 		$meage=array(
@@ -297,6 +304,9 @@ if($a=="update"){
 	echo json_encode($meage);
 	exit ;
 }
+
+
+
 $meage=array(
 	'code'=> 403,
 	'messgae'=> 'Method is not define'
