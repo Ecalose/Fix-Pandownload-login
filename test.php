@@ -137,7 +137,7 @@ if($a=="request"){
 		//echo $ret1;
 		if ($ret1=="Er"){
 			$meage=array(
-			'code'=> 405,
+			'code'=> 305,
 			'messgae'=> '账号过期或黑号，请提醒更换，此次不计数',
 			);
 			echo json_encode($meage);
